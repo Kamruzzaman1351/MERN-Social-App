@@ -66,7 +66,7 @@ const userSignup = asyncHandler( async(req, res) => {
 
 // Create Web Token
 const createToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_TOKEN, {expiresIn:90})
+    return jwt.sign({id}, process.env.JWT_TOKEN, {expiresIn:"120d"})
 }
 module.exports = {
     userLogin,

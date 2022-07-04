@@ -1,37 +1,83 @@
 const asyncHandler = require("express-async-handler")
-
+const Feed = require("../models/feedModel.js")
 
 
 // @desc Get All Feeds
-// @route /api/feeds
+// @route GET /api/feeds
 // @access All Users
 const getAllFeeds = asyncHandler(async (req, res) => {
-    res.json({
-        message: "Get all feeds"
-    })
+    if(!req.user) {
+        res.status(400)
+        throw new Error("You are not Authorized")
+    }
+    const feeds = await Feed.find().sort({createAt: -1})
+    res.status(200).json(feeds)
 })
 // @desc Create Feed
-// @route /api/feeds
-// @access User
+// @route POST /api/feeds
+// @access All Users
 const createFeed = asyncHandler(async (req, res) => {
-    res.json({
-        message: "Create feed"
+    if(!req.body) {
+        res.status(400)
+        throw new Error("Not Authorized")
+    }
+    const {title, img_url, tags} = req.body
+    if(!title || !img_url) {
+        res.status(400)
+        throw new Error("Need an Image and a title")
+    }
+    const feed = await Feed.create({
+        user_id: req.user._id,
+        user_name: req.user.name,
+        title,
+        img_url,
+        tags: tags.split(",")
     })
+
+    res.status(201).json(feed)
 })
-// @desc Get Update Feed
-// @route /api/feeds/id
-// @access User
+// @desc  Update Feed
+// @route PUT /api/feeds/id
+// @access Single User
 const updateFeed = asyncHandler(async (req, res) => {
-    res.json({
-        message: `Update feeds ${req.params.id}`
-    })
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorized")
+    }
+    const feed = await Feed.findById(req.params.id).where("user_id").equals(req.user._id)
+    if(!feed) {
+        res.status(400)
+        throw new Error("Not Authorized to Update")
+    }
+    if(feed.user_id.toString() !== req.user._id.toString()) {
+        res.status(400)
+        throw new Error("Not Authorized to Update")
+    }
+    const updatedFeed = await Feed.findByIdAndUpdate(req.params.id, req.body, {new: true})
+
+    res.status(200).json(updatedFeed)
 })
 // @desc Delete Feed
-// @route /api/feeds/id
-// @access All Users
+// @route DELETE /api/feeds/id
+// @access Single User
 const deleteFeed = asyncHandler(async (req, res) => {
-    res.json({
-        message: `Delete feed ${req.params.id}`
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorized")
+    }
+    const feed = await Feed.findById(req.params.id).where("user_id").equals(req.user._id)
+    if(!feed) {
+        res.status(400)
+        throw new Error("Not Authorized to Delete")
+    }
+    if(feed.user_id.toString() !== req.user._id.toString()) {
+        res.status(400)
+        throw new Error("Not Authorized to Delete")
+    }
+    await Feed.findByIdAndDelete(req.params.id)
+    res.status(200).json({
+        message: "Feed Deleted",
+        id: req.params.id
     })
 })
 
