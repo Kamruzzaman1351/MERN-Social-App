@@ -1,0 +1,15 @@
+{
+  "name": "socialapp",
+  "version": "1.0.0",
+  "description": "Mern stack social app",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js"
+  },
+  "author": "Kamruzzaman Md",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.3.3"
+  }
+}
