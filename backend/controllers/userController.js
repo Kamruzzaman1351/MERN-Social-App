@@ -2,23 +2,36 @@ const asyncHandler = require("express-async-handler")
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcryptjs')
 const User = require("../models/userModel")
-const { use } = require("../routers/userRouters")
 
 // @desc Login User
 // @method POST /api/users/login
 // @Oaccess Open 
 const userLogin = asyncHandler( async(req, res) => {
-    if(!req.body.text) {
-        res.status(401)
-        throw new Error("Body is missing")
+    const {email, password} = req.body
+    if(!email || !password) {
+        res.status(400)
+        throw new Error("Login Credential require")
     }
-    // res.json({
-    //     "message": "Sign In working"
-    // })
+    const user = await User.findOne({email})
+    if(!user) {
+        res.status(400)
+        throw new Error("User does not exist")
+    } 
+    if(await bcrypt.compare(password, user.password)) {
+        res.status(200).json({
+            name: user.name,
+            email: user.email,
+            token: createToken(user._id)
+        })
+    } else {
+        res.status(400)
+        throw new Error("Wrong password")
+
+    }
 })
 
 // @desc User Signup
-// @route POST /api/users/register
+// @route POST /api/users/signup
 // @access Open
 const userSignup = asyncHandler( async(req, res) => {
     const {name, email, password} = req.body
