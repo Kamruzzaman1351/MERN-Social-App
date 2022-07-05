@@ -1,10 +1,30 @@
+import React from "react";
+import {BrowserRouter, Routes, Route} from "react-router-dom"
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import UserFeedPage from "./pages/UserFeedPage";
+import UserProfilePage from "./pages/UserProfilePage";
+import Header from "./components/shared/Header";
+import Footer from "./components/shared/Footer";
 
 
 function App() {
   return (
-    <div>
-      <h2>Social App</h2>
-    </div>
+    <>      
+      <BrowserRouter>
+        <div>
+          <Header />
+          <Routes>
+            <Route path="/" element={<SignInPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/feeds" element={<UserFeedPage />} />
+            <Route path="/profile" element={<UserProfilePage />} />
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </>
   );
 }
 
