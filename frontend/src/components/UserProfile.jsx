@@ -1,13 +1,13 @@
 import React from 'react'
 import {Card} from "react-bootstrap"
 import {Link} from "react-router-dom"
-const UserProfile = () => {
+const UserProfile = ({user}) => {
   return (
     <div>
         <Card>
             <Card.Img variant="top" src="" />
             <Card.Body>
-                <Card.Title>User Name</Card.Title>
+                <Card.Title>{user.name}</Card.Title>
                 <Card.Text>
                     User Bio
                 </Card.Text>

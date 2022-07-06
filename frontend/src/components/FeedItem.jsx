@@ -1,18 +1,32 @@
 import React from 'react'
-import { Card } from 'react-bootstrap'
-const FeedItem = () => {
+import { Card, Stack, Button } from 'react-bootstrap'
+const FeedItem = ({feed}) => {
   return (
-    <div>
+    <div className='my-4'>
         <Card>
             <Card.Img variant="top" src="" />
             <Card.Body>
-                <Card.Title>Feed Title</Card.Title>
+                <Card.Title>{feed.title}</Card.Title>
                 <Card.Text>
-                    Feed Tags
+                    {feed.tags.map(tag => (
+                        <span key={tag}>#{tag} </span>
+                    ))}
                 </Card.Text>
             </Card.Body>
             <Card.Footer>
-                Likes
+                <Stack direction="horizontal" gap={3}>
+                    <div>
+                        <Button variant="success">
+                            Likes: {feed.like_count}
+                        </Button>
+                    </div>
+                    <div className='ms-auto'>
+                        <Button variant="info">Edit</Button>
+                    </div>
+                    <div>
+                        <Button variant="danger">Delete</Button>
+                    </div>
+                </Stack> 
             </Card.Footer>
         </Card>
     </div>
