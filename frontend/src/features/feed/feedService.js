@@ -13,23 +13,23 @@ const getAllFeeds = async(token) => {
     return response.data
 }
 // Create Feed
-const createFeed = async(feedDate, token) => {
+const createFeed = async(feedData, token) => {
     const config = {
         headers: {
             Authorization : `Bearer ${token}`
         }        
     }
-    const response = await axios.post(API_URL, feedDate, config)
+    const response = await axios.post(API_URL, feedData, config)
     return response.data
 }
 // Update Feed
-const updateFeed = async(id, feedDate, token) => {
+const updateFeed = async(id, feedData, token) => {
     const config = {
         headers: {
             Authorization : `Bearer ${token}`
         }        
     }
-    const response = await axios.put(API_URL + id, feedDate, config)
+    const response = await axios.put(API_URL + id, feedData, config)
     return response.data
 }
 // Delete Feed

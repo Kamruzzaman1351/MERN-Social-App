@@ -1,14 +1,18 @@
 import React from 'react'
 import { Card, Stack, Button } from 'react-bootstrap'
-import { deleteFeed } from '../features/feed/feedSlice'
+import { deleteFeed, setEditForm } from '../features/feed/feedSlice'
 import { useDispatch, useSelector } from 'react-redux'
-const FeedItem = ({feed}) => {
+const FeedItem = ({feed, setFeed}) => {
     const dispatch = useDispatch()
     const {user} = useSelector(state => state.user)
     const handleClick = () => {
         if(window.confirm("Are Your Sure?")) {
             dispatch(deleteFeed(feed._id))
         }
+    }
+    const onEdit = () => {
+        dispatch(setEditForm())
+        setFeed(feed)
     }
   return (
     <div className='my-4'>
@@ -32,7 +36,7 @@ const FeedItem = ({feed}) => {
                     </div>
                     {(user.id.toString() === feed.user_id.toString()) && <>
                         <div className='ms-auto'>
-                            <Button variant="info">Edit</Button>
+                            <Button variant="info" onClick={onEdit}>Edit</Button>
                         </div>
                         <div>
                             <Button variant="danger" onClick={handleClick}>Delete</Button>

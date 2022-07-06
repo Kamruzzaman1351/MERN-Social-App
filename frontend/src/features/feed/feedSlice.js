@@ -5,7 +5,8 @@ const initialState = {
     isLoading: false,
     isError: false,
     isSuccess: false,
-    isMessage: ''
+    isMessage: '',
+    editForm: false,
 }
 
 // Get All Feeds
@@ -25,6 +26,19 @@ export const createFeed = createAsyncThunk("/create/feed", async(feed, thunkAPI)
     try {
         const token = thunkAPI.getState().user.user.token
         return await feedService.createFeed(feed, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message)
+                        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Update Feed 
+export const updateFeed = createAsyncThunk("/update/feed", async(data, thunkAPI) => {
+    try {
+        const {id, formData} = data
+        const token = thunkAPI.getState().user.user.token
+        return await feedService.updateFeed(id, formData, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message)
                         || error.message || error.toString()
@@ -52,6 +66,12 @@ const feedSlice = createSlice({
             state.isError = false
             state.isMessage = ''
             state.isSuccess = false
+        },
+        setEditForm: (state) => {
+            state.editForm = true
+        },
+        unSetEditForm: (state) => {
+            state.editForm = false
         }
     },
     extraReducers: (builder) => {
@@ -83,6 +103,25 @@ const feedSlice = createSlice({
                 state.isError = true
                 state.isMessage = action.payload
             })
+            .addCase(updateFeed.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updateFeed.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.feeds =  state.feeds.map(feed => feed._id === action.payload._id ? 
+                                {   ...feed,
+                                    title: action.payload.title,
+                                    tags: action.payload.tags,
+                                    img_url: action.payload.img_url
+                                } : feed
+                            )
+            })
+            .addCase(updateFeed.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.isMessage = action.payload
+            })
             .addCase(deleteFeed.fulfilled, (state, action) => {
                 state.feeds = state.feeds.filter(feed => feed._id !== action.payload.id)
             })
@@ -92,5 +131,5 @@ const feedSlice = createSlice({
     }
 })
 
-export const { reset } = feedSlice.actions
+export const { reset, setEditForm, unSetEditForm } = feedSlice.actions
 export default feedSlice.reducer

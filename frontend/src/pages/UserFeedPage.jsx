@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Container, Row, Col, Spinner } from "react-bootstrap"
 import FeedItem from '../components/FeedItem'
 import FeedForm from '../components/FeedForm'
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 
 
 const UserFeedPage = () => {
+  const [feed, setFeed] = useState(null)
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.user)
   const {feeds, isLoading, isError, isMessage} = useSelector(state => state.feeds)
@@ -35,7 +36,7 @@ const UserFeedPage = () => {
               {isLoading && <Spinner animation="border" role="status" />}
               {feeds.length > 0 ? (<>
                 {feeds.map((feed) => (
-                  <FeedItem key={feed._id} feed={feed} />
+                  <FeedItem key={feed._id} feed={feed} setFeed={setFeed} />
                 ))}
                   </>) : (<>
                     <h3>No Feed Yet</h3>
@@ -44,7 +45,7 @@ const UserFeedPage = () => {
             </div>
           </Col>
           <Col md={3} className="my-3">
-            <FeedForm />
+            <FeedForm feed={feed}/>
           </Col>
         </Row>
       </Container>
