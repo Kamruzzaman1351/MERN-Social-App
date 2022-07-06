@@ -32,11 +32,11 @@ const FeedForm = () => {
                                         id='tags' 
                                         placeholder='Tags' 
                                     />
-                                    <small>Please put "," after each tag</small>
+                                    <small>Please put comma after each tag</small>
                                 </div>
-                                <div class="form-group my-2">
-                                    <label className='my-2' for="img_url">Upload an Image</label>
-                                    <input type="file" class="form-control-file" id="img_url" />
+                                <div className="form-group my-2">
+                                    <label className='my-2' htmlFor="img_url">Upload an Image</label>
+                                    <input type="file" className="form-control-file" id="img_url" />
                                 </div>                  
                                 <Button className='my-4' type='submit' variant="primary" style={{width: "100%"}}>Submit</Button>
                             </form>

@@ -6,7 +6,8 @@ import UserFeedPage from "./pages/UserFeedPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import Header from "./components/shared/Header";
 import Footer from "./components/shared/Footer";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/profile" element={<UserProfilePage />} />
           </Routes>
           <Footer />
+          <ToastContainer />
         </div>
       </BrowserRouter>
     </>

@@ -1,16 +1,25 @@
 import React from 'react'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {Container, Stack} from "react-bootstrap"
+import { useSelector, useDispatch } from 'react-redux'
+import { logoutUser } from '../../features/auth/userSlice'
 const Header = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {user} = useSelector(state => state.user)
+  const logout = () => {
+    dispatch(logoutUser())
+    navigate("/signin")
+  }
   return (
     <nav className="bg-primary p-3 text-white mb-3">
       <Container fluid>
         <div>
           <Stack direction="horizontal" gap={3}>
-            <Link to={ false? "/feeds" : "/"}>
+            <Link to={ user ? "/feeds" : "/"}>
               <h2 className="text-white link">Social App</h2>
             </Link>
-            {false ? (<>
+            {user ? (<>
               <div className="ms-auto">
                 <Link to="/profile" className='text-white menuItem'>Profile</Link>
               </div>
@@ -18,7 +27,7 @@ const Header = () => {
                 <Link to="/feeds" className='text-white menuItem'>My Feed</Link>
               </div>
               <div>
-                <h5 className='text-white menuItem'>Logout</h5>
+                <h5 className='text-white menuItem' onClick={logout}>Logout</h5>
               </div>
               
             </>) : (<>
