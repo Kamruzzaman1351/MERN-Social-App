@@ -16,9 +16,12 @@ const UserFeedPage = () => {
     if(isError) {
       toast.error(isMessage, {autoClose:1000})
     }
+    if(isMessage) {
+      toast.info(isMessage, {autoClose:1000})
+    }
     dispatch(getAllFeeds())
     dispatch(reset())
-  }, [isError, dispatch])
+  }, [isError, dispatch, isMessage])
   return (
     <>
       <Container fluid>

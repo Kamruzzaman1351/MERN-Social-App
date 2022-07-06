@@ -1,11 +1,21 @@
 import React from 'react'
 import { Card, Stack, Button } from 'react-bootstrap'
+import { deleteFeed } from '../features/feed/feedSlice'
+import { useDispatch, useSelector } from 'react-redux'
 const FeedItem = ({feed}) => {
+    const dispatch = useDispatch()
+    const {user} = useSelector(state => state.user)
+    const handleClick = () => {
+        if(window.confirm("Are Your Sure?")) {
+            dispatch(deleteFeed(feed._id))
+        }
+    }
   return (
     <div className='my-4'>
         <Card>
-            <Card.Img variant="top" src="" />
+            {feed.img_url && <Card.Img variant="top" src={feed.img_url} height="280px" />}
             <Card.Body>
+                <p className='mt-1 pl-1'>Created By: {feed.user_name}</p>
                 <Card.Title>{feed.title}</Card.Title>
                 <Card.Text>
                     {feed.tags.map(tag => (
@@ -20,12 +30,14 @@ const FeedItem = ({feed}) => {
                             Likes: {feed.like_count}
                         </Button>
                     </div>
-                    <div className='ms-auto'>
-                        <Button variant="info">Edit</Button>
-                    </div>
-                    <div>
-                        <Button variant="danger">Delete</Button>
-                    </div>
+                    {(user.id.toString() === feed.user_id.toString()) && <>
+                        <div className='ms-auto'>
+                            <Button variant="info">Edit</Button>
+                        </div>
+                        <div>
+                            <Button variant="danger" onClick={handleClick}>Delete</Button>
+                        </div>
+                    </> }
                 </Stack> 
             </Card.Footer>
         </Card>

@@ -10,7 +10,7 @@ const getAllFeeds = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("You are not Authorized")
     }
-    const feeds = await Feed.find().sort({createAt: -1})
+    const feeds = await Feed.find().sort({createdAt: -1})
     res.status(200).json(feeds)
 })
 // @desc Create Feed

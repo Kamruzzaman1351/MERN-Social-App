@@ -21,6 +21,7 @@ const userLogin = asyncHandler( async(req, res) => {
         res.status(200).json({
             name: user.name,
             email: user.email,
+            id: user._id,
             token: createToken(user._id)
         })
     } else {
@@ -58,6 +59,7 @@ const userSignup = asyncHandler( async(req, res) => {
     res.status(200).json({
         name: user.name,
         email: user.email,
+        id: user._id,
         token: createToken(user._id)
     })
 })
