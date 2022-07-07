@@ -10,6 +10,11 @@ const userSchema = mongoose.Schema({
         require: [true, "Email is require"],
         unique: [true, "Email allready be used"]
     },
+    profession: {
+        type: String,
+        require: true,
+        default: "Web Developer"
+    },
     password: {
         type: String,
         require: [true, "Password is require"]

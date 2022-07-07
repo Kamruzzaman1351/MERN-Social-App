@@ -35,8 +35,8 @@ const userLogin = asyncHandler( async(req, res) => {
 // @route POST /api/users/signup
 // @access Open
 const userSignup = asyncHandler( async(req, res) => {
-    const {name, email, password} = req.body
-    if(!name || !email || !password) {
+    const {name, email, password, profession} = req.body
+    if(!name || !email || !password || !profession) {
         res.status(400)
         throw new Error("Please provide all credentials")
     }
@@ -53,12 +53,14 @@ const userSignup = asyncHandler( async(req, res) => {
     const user = await User.create({
         name,
         email,
+        profession,
         password: hashPassword
     })
 
     res.status(200).json({
         name: user.name,
         email: user.email,
+        profession: user.profession,
         id: user._id,
         token: createToken(user._id)
     })

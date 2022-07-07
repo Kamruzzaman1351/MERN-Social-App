@@ -15,8 +15,9 @@ const SignUpPage = () => {
     email: "",
     password: "",
     password1: "",
+    profession: ""
   })
-  const {name, email, password, password1} = formData
+  const {name, email, password, password1, profession} = formData
   const {isLoading, isError, isSuccess, isMessage, user} = useSelector(state => state.user)
   useEffect(() => {
     if(isError) {
@@ -37,7 +38,7 @@ const SignUpPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    if(!name || !email || !password || !password1) {
+    if(!name || !email || !password || !password1 || !profession) {
       toast.error("Please fill all inputs", {autoClose:1000})
     } else if(password !== password1) {
       toast.error("Password does not match", {autoClose:1000})
@@ -45,7 +46,8 @@ const SignUpPage = () => {
       const copyformData = {
         name,
         email,
-        password
+        password,
+        profession
       }
       dispatch(registerUser(copyformData))
     }
@@ -86,6 +88,17 @@ const SignUpPage = () => {
                       id='email' 
                       placeholder='Your Email' 
                       value={email}
+                      onChange={onChange}
+                    />
+                  </div>
+                  <div className="form-group my-2">
+                    <label className='my-2' htmlFor='profession'>Your Profession</label>
+                    <input 
+                      className="form-control" 
+                      type="text" 
+                      id='profession' 
+                      placeholder='Your Profession' 
+                      value={profession}
                       onChange={onChange}
                     />
                   </div>

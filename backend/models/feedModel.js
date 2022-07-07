@@ -15,6 +15,10 @@ const feedSchema = mongoose.Schema({
         type: String,
         require: [true, "Feed title is require"]
     },
+    body: {
+        type: String,
+        require: true
+    },
     img_url: {
         type: String,
     },

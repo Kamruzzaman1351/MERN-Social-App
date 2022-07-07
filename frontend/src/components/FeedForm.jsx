@@ -9,10 +9,11 @@ const FeedForm = ({feed}) => {
     const {isSuccess, isLoading, editForm} = useSelector(state => state.feeds)
     const [formData, setFormdata] = useState({
         title: "",
+        body: "",
         tags: "",
         img_url: "",
     })
-    const {title, tags, img_url } = formData
+    const {title, body, tags, img_url } = formData
     useEffect(() => {
         if(editForm) {
             setFormdata(feed)
@@ -27,13 +28,14 @@ const FeedForm = ({feed}) => {
     const clearForm = () => {
         setFormdata({
             title: "",
+            body: "",
             tags:"",
             img_url: ""
         })
     }
     const onSubmit = (e) => {
         e.preventDefault()
-        if(!title || !tags || !img_url) {
+        if(!title || !tags || !img_url || !body) {
             toast.error("Please add all inputs", {autoClose:1000})
         } else {
             dispatch(createFeed(formData))
@@ -46,7 +48,7 @@ const FeedForm = ({feed}) => {
     }
     const onUpdate = (e) => {
         e.preventDefault()
-        if(feed.title === title && feed.tags === tags && feed.img_url === img_url) {
+        if(feed.title === title && feed.tags === tags && feed.img_url === img_url && feed.body === body) {
             toast.error("You did not change anythig", {autoClose:1000})
         } else {
             const data = {
@@ -80,6 +82,24 @@ const FeedForm = ({feed}) => {
                                         value={title}
                                         onChange={onChange} 
                                     />
+                                </div>
+                                <div className="form-group my-2">
+                                    <textarea 
+                                        className="form-control"
+                                        id="body" 
+                                        rows={3} 
+                                        value={body} 
+                                        onChange={onChange}
+                                        placeholder= "Write your post..."
+                                        
+                                    ></textarea>
+                                    {/* <input 
+                                        className="form-control" 
+                                        type="text" 
+                                        id='body' 
+                                        value={body}
+                                        onChange={onChange} 
+                                    /> */}
                                 </div>
                                 <div className="form-group my-2">
                                     <input 

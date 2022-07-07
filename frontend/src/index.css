@@ -67,6 +67,31 @@ label {
 .card {
     border-radius: 12px;
 }
+.profileImgDiv {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin: auto;
+}
+.feedUserImg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 10px;
+    padding: 5px;
+}
+.feedUserName {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 0;
+    padding-top: 18px;
+}
+.feedUserInfo {
+    font-size: 12px;
+}
+.feedUserInfo span {
+    margin-top: -5px;
+}
 
 
 

@@ -21,15 +21,16 @@ const createFeed = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Not Authorized")
     }
-    const {title, img_url, tags} = req.body
-    if(!title || !img_url) {
+    const {title, img_url, tags, body} = req.body
+    if(!title || !img_url || !body) {
         res.status(400)
-        throw new Error("Need an Image and a title")
+        throw new Error("Need an Image, title and body ")
     }
     const feed = await Feed.create({
         user_id: req.user._id,
         user_name: req.user.name,
         title,
+        body,
         img_url,
         tags: tags.split(",")
     })

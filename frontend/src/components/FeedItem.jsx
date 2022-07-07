@@ -1,7 +1,9 @@
 import React from 'react'
-import { Card, Stack, Button } from 'react-bootstrap'
+import { Card, Stack, Button, Badge } from 'react-bootstrap'
 import { deleteFeed, setEditForm } from '../features/feed/feedSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import avatar from "../assets/images/avatar.jpg"
+import moment from "moment"
 const FeedItem = ({feed, setFeed}) => {
     const dispatch = useDispatch()
     const {user} = useSelector(state => state.user)
@@ -17,13 +19,29 @@ const FeedItem = ({feed, setFeed}) => {
   return (
     <div className='my-4'>
         <Card>
-            {feed.img_url && <Card.Img variant="top" src={feed.img_url} height="280px" />}
+            <Card.Header>
+                <Stack direction='horizontal'>
+                    <div>
+                        <Card.Img className="feedUserImg" src={avatar}/>
+                    </div>
+                    <div>
+                        <h5 className='feedUserName'>{feed.user_name}</h5>
+                        <div className='feedUserInfo'>
+                            <p>Web Develoer <br/> {moment(feed.createdAt).fromNow()} </p>
+                        </div>
+                    </div>
+                    <div className='ms-auto'>
+                       ...
+                    </div>
+                </Stack>
+            </Card.Header>
             <Card.Body>
-                <p className='mt-1 pl-1'>Created By: {feed.user_name}</p>
                 <Card.Title>{feed.title}</Card.Title>
+                <p>{feed.body}</p>
+                {feed.img_url && <Card.Img className='p-2' src={feed.img_url} height="280px" />}
                 <Card.Text>
                     {feed.tags.map(tag => (
-                        <span key={tag}>#{tag} </span>
+                        <Badge bg="info" className="mx-1" key={tag}>#{tag} </Badge>
                     ))}
                 </Card.Text>
             </Card.Body>
