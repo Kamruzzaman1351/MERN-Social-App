@@ -57,6 +57,19 @@ export const deleteFeed = createAsyncThunk("/delete/feed", async(id, thunkAPI) =
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+// Like Feed
+export const likeFeed = createAsyncThunk("/update/like", async(id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().user.user.token
+        return await feedService.likeFeed(id, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message)
+                        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 const feedSlice = createSlice({
     name: "feeds",
     initialState,
@@ -109,13 +122,7 @@ const feedSlice = createSlice({
             .addCase(updateFeed.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.feeds =  state.feeds.map(feed => feed._id === action.payload._id ? 
-                                {   ...feed,
-                                    title: action.payload.title,
-                                    tags: action.payload.tags,
-                                    img_url: action.payload.img_url
-                                } : feed
-                            )
+                state.feeds =  state.feeds.map(feed => feed._id === action.payload._id ? action.payload : feed)
             })
             .addCase(updateFeed.rejected, (state, action) => {
                 state.isLoading = false
@@ -126,6 +133,15 @@ const feedSlice = createSlice({
                 state.feeds = state.feeds.filter(feed => feed._id !== action.payload.id)
             })
             .addCase(deleteFeed.rejected, (state, action) => {
+                state.isMessage = action.payload
+            })
+            .addCase(likeFeed.fulfilled, (state, action) => {
+                state.isSuccess = true
+                state.feeds = state.feeds.map(feed => feed._id === action.payload._id ? action.payload : feed)
+            })
+            .addCase(likeFeed.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
                 state.isMessage = action.payload
             })
     }

@@ -43,11 +43,23 @@ const deleteFeed = async(id, token) => {
     return response.data
 }
 
+// Update Feed Like
+const likeFeed = async(id, token) => {
+    const config = {
+        headers: {
+            Authorization : `Bearer ${token}`
+        }        
+    }
+    const response = await axios.put(API_URL + id + "/likefeed", "", config)
+    return response.data
+}
+
 const feedService = {
     getAllFeeds,
     createFeed,
     updateFeed,
     deleteFeed,
+    likeFeed,
 }
 
 export default feedService

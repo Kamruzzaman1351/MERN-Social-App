@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Stack, Button, Badge } from 'react-bootstrap'
-import { deleteFeed, setEditForm } from '../features/feed/feedSlice'
+import { deleteFeed, setEditForm, likeFeed } from '../features/feed/feedSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import avatar from "../assets/images/avatar.jpg"
 import moment from "moment"
@@ -48,7 +48,7 @@ const FeedItem = ({feed, setFeed}) => {
             <Card.Footer>
                 <Stack direction="horizontal" gap={3}>
                     <div>
-                        <Button variant="success">
+                        <Button variant="success" onClick={() => dispatch(likeFeed(feed._id))}>
                             Likes: {feed.like_count}
                         </Button>
                     </div>

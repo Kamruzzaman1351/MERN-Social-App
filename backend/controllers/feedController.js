@@ -82,9 +82,27 @@ const deleteFeed = asyncHandler(async (req, res) => {
     })
 })
 
+// @desc Update Feed Like
+// @route PUT /api/feeds/id
+// @access All User
+const updateLike = asyncHandler( async(req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorize")
+    }
+    const feed = await Feed.findById(req.params.id)
+    if(!feed) {
+        res.status(403)
+        throw new Error("Feed not Found")
+    }
+    const updatedFeed = await Feed.findByIdAndUpdate(req.params.id, {like_count: feed.like_count + 1 }, {new: true})
+    res.status(200).json(updatedFeed)
+})
+
 module.exports = {
     getAllFeeds,
     createFeed,
     updateFeed,
-    deleteFeed
+    deleteFeed,
+    updateLike
 }
