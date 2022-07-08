@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
         type: String,
         require: [true, "Password is require"]
     },
-    avater: {
+    avatar: {
         type: String,
         default: null
     },

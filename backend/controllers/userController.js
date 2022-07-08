@@ -22,6 +22,12 @@ const userLogin = asyncHandler( async(req, res) => {
             name: user.name,
             email: user.email,
             id: user._id,
+            profession: user.profession,
+            avatar: user.avatar,
+            address: user.address,
+            phone: user.phone,
+            createdAt: user.createdAt,
+            bio: user.bio,
             token: createToken(user._id)
         })
     } else {
@@ -66,7 +72,33 @@ const userSignup = asyncHandler( async(req, res) => {
     })
 })
 
-
+// @desc User Profile Update
+// @route POST /api/users/update
+// @access User
+const userProfileUpdate = asyncHandler(async(req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorize")
+    }
+    const user = await User.findById(req.user.id)
+    if(req.user.id.toString() !== user._id.toString()) {
+        res.status(400)
+        throw new Error("You are not authorized to update")
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {new: true})
+    res.status(200).json({
+        name: updatedUser.name,
+        email: updatedUser.email,
+        id: updatedUser._id,
+        profession: updatedUser.profession,
+        avatar: updatedUser.avatar,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        bio: updatedUser.bio,
+        createdAt: updatedUser.createdAt,
+        token: createToken(updatedUser._id)
+    })
+})
 
 // Create Web Token
 const createToken = (id) => {
@@ -74,5 +106,6 @@ const createToken = (id) => {
 }
 module.exports = {
     userLogin,
-    userSignup
+    userSignup,
+    userProfileUpdate,
 }

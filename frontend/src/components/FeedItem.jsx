@@ -22,12 +22,12 @@ const FeedItem = ({feed, setFeed}) => {
             <Card.Header>
                 <Stack direction='horizontal'>
                     <div>
-                        <Card.Img className="feedUserImg" src={avatar}/>
+                        <Card.Img className="feedUserImg" src={user.avatar ? user.avatar : avatar}/>
                     </div>
                     <div>
                         <h5 className='feedUserName'>{feed.user_name}</h5>
                         <div className='feedUserInfo'>
-                            <p>Web Develoer <br/> {moment(feed.createdAt).fromNow()} </p>
+                            <p>Web Develoer <br/>Created: {moment(feed.createdAt).fromNow()} </p>
                         </div>
                     </div>
                     <div className='ms-auto'>

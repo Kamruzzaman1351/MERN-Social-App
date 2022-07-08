@@ -1,8 +1,21 @@
-import React, {useState} from 'react'
-import { Card, Button } from 'react-bootstrap'
+import React, {useState, useEffect} from 'react'
+import { Card, Button, Spinner } from 'react-bootstrap'
 import FileBase64 from 'react-file-base64'
-
+import { updateProfile, reset } from '../features/auth/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import {toast} from "react-toastify"
 const UserUpdateForm = ({user}) => {
+    const dispatch = useDispatch()
+    const {isError, isLoading, isSuccess, isMessage} = useSelector(state => state.user)
+    useEffect(() => {
+        if(isError) {
+            toast.error(isMessage, {autoClose:1000})
+        }
+        if(isSuccess) {
+            toast.success("Profile Updated", {autoClose:1000})
+            dispatch(reset())
+        }
+    }, [isError, isSuccess, isMessage, dispatch])
     const [formData, setFormData] = useState(user)
     const {name, email, profession, avatar, bio, address, phone } = formData
     const onChange = (e) => {
@@ -14,9 +27,11 @@ const UserUpdateForm = ({user}) => {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        console.log(formData)
+        dispatch(updateProfile(formData))
     }
-
+    if(isLoading) {
+        return <Spinner animation="border" />
+    }
   return (
     <>
         <Card>

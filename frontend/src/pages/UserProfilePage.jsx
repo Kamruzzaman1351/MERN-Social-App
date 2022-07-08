@@ -9,10 +9,10 @@ const UserProfilePage = () => {
     <>
       <Container>
         <Row>
-          <Col md={3}>
+          <Col md={4} className="my-3">
             <UserProfile user={user} />
           </Col>
-          <Col md={6}>
+          <Col md={6} className="my-3">
             <UserUpdateForm user={user} />
           </Col>
         </Row>
