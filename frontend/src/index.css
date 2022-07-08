@@ -92,7 +92,10 @@ label {
 .feedUserInfo span {
     margin-top: -5px;
 }
-
+.form-control:disabled, .form-control[readonly] {
+    background-color: #fff;
+    border: none;
+}
 
 
 

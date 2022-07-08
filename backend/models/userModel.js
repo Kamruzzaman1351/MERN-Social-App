@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema({
         require: true,
         default: "Web Developer"
     },
+    bio: {
+        type: String,
+        default: null,
+    },
     password: {
         type: String,
         require: [true, "Password is require"]
