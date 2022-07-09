@@ -116,7 +116,7 @@ label {
     box-shadow: none;
     border: none;
 }
-.userSearch span {
+.userSearch button {
     width: 65px;
     font-size: 22px;
 }

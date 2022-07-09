@@ -100,6 +100,18 @@ const userProfileUpdate = asyncHandler(async(req, res) => {
     })
 })
 
+// @desc Get All Users
+// @route GET /api/users/allusers
+// @access User
+const getAllUsers = asyncHandler(async (req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("You are not authorized")
+    }
+    const allUser = await User.find().select("name profession avatar").sort({name:1})
+    res.status(200).json(allUser)
+})
+
 // Create Web Token
 const createToken = (id) => {
     return jwt.sign({id}, process.env.JWT_TOKEN, {expiresIn:"120d"})
@@ -108,4 +120,5 @@ module.exports = {
     userLogin,
     userSignup,
     userProfileUpdate,
+    getAllUsers,
 }

@@ -29,10 +29,21 @@ const updateProfile = async(data, token) => {
     localStorage.setItem("user", JSON.stringify(response.data))
     return response.data
 }
+
+const getAllUsers = async(token) => {
+    const config =  {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(API_URL + "allusers", config)
+    return response.data
+}
 const userService = {
     login,
     register,
     logout,
     updateProfile,
+    getAllUsers,
 }
 export default userService
