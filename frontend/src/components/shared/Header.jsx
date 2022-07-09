@@ -27,6 +27,9 @@ const Header = () => {
                 <Link to="/feeds" className='text-white menuItem'>My Feed</Link>
               </div>
               <div>
+                <Link to="/alluser" className='text-white menuItem'>Users</Link>
+              </div>
+              <div>
                 <h5 className='text-white menuItem' onClick={logout}>Logout</h5>
               </div>
               

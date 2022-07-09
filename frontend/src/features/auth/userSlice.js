@@ -10,6 +10,7 @@ const initialState = {
     isError: false,
     isSuccess: false,
     isMessage: '',
+    allUsers:[]
 }
 
 // User Login
