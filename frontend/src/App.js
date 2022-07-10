@@ -7,6 +7,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import UserLists from "./pages/UserLists";
 import Header from "./components/shared/Header";
 import Footer from "./components/shared/Footer";
+import UserInfoPage from "./pages/UserInfoPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserPrivatRoute from "./components/UserPrivatRoute";
@@ -30,6 +31,9 @@ function App() {
             </Route>
             <Route path="/alluser" element={<UserPrivatRoute />}>
               <Route path="/alluser" element={<UserLists />} />
+            </Route>
+            <Route path="/user/:id" element={<UserPrivatRoute />}>
+              <Route path="/user/:id" element={<UserInfoPage />} />
             </Route>
             <Route path="/profile" element={<UserProfilePage />} />
           </Routes>

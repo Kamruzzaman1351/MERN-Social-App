@@ -39,11 +39,23 @@ const getAllUsers = async(token) => {
     const response = await axios.get(API_URL + "allusers", config)
     return response.data
 }
+
+const getUserInfo = async(id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(`/api/users/${id}`, config)
+    return response.data
+}
+
 const userService = {
     login,
     register,
     logout,
     updateProfile,
     getAllUsers,
+    getUserInfo,
 }
 export default userService

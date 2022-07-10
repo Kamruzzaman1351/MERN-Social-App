@@ -10,7 +10,8 @@ const initialState = {
     isError: false,
     isSuccess: false,
     isMessage: '',
-    allUsers:[]
+    allUsers:[],
+    userInfo: null,
 }
 
 // User Login
@@ -56,7 +57,7 @@ export const logoutUser = createAsyncThunk("/user/logout", async() => {
 export const getAllUsers = createAsyncThunk("/user/allusers", async(_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().user.user.token
-        return userService.getAllUsers(token)
+        return await userService.getAllUsers(token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message)
                         || error.message || error.toString()
@@ -64,6 +65,17 @@ export const getAllUsers = createAsyncThunk("/user/allusers", async(_, thunkAPI)
     }
 })
 
+// Get User Info
+export const getUserInfo = createAsyncThunk("/user/info", async(id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().user.user.token
+        return await userService.getUserInfo(id, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message)
+                || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 const userSlice = createSlice({
     name: "user",
     initialState,
@@ -135,6 +147,21 @@ const userSlice = createSlice({
                 state.isSuccess = false
                 state.isError = true
                 state.isMessage = action.payload
+            })
+            .addCase(getUserInfo.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getUserInfo.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.userInfo = action.payload
+            })
+            .addCase(getUserInfo.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.isSuccess = false
+                state.isMessage = action.payload
+                state.userInfo = null
             })
     }
 })

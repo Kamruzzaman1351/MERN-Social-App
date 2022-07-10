@@ -108,10 +108,25 @@ const getAllUsers = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("You are not authorized")
     }
-    const allUser = await User.find().select("name profession avatar").sort({name:1})
+    const allUser = await User.find({"_id": {$ne: req.user._id}}).select("name profession avatar").sort({name:1})
     res.status(200).json(allUser)
 })
 
+// @desc Get User Info
+// @route GET /api/users/:id
+// @access User
+const getUserInfo = asyncHandler(async(req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorized")
+    }
+    const user = await User.findById(req.params.id).select("-password -_id")
+    if(!user) {
+        res.status(400)
+        throw new Error("User does not exist")
+    }
+    res.status(200).json(user)
+})
 // Create Web Token
 const createToken = (id) => {
     return jwt.sign({id}, process.env.JWT_TOKEN, {expiresIn:"120d"})
@@ -121,4 +136,5 @@ module.exports = {
     userSignup,
     userProfileUpdate,
     getAllUsers,
+    getUserInfo,
 }
