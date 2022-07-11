@@ -18,7 +18,7 @@ const UserProfile = ({user}) => {
                   <p> Member Since: {moment(user.createdAT).format("DD MMM YYYY")} </p>
                 </>
                 }
-                
+                <Link to="/friend-list" className='btn btn-primary my-3' style={{width:"100%"}}>All Friends</Link>
             </Card.Body>
         </Card>
     </div>

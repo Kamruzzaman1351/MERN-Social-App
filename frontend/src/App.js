@@ -4,6 +4,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import UserFeedPage from "./pages/UserFeedPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import UserFriend from "./pages/UserFriend";
 import UserLists from "./pages/UserLists";
 import Header from "./components/shared/Header";
 import Footer from "./components/shared/Footer";
@@ -31,6 +32,9 @@ function App() {
             </Route>
             <Route path="/alluser" element={<UserPrivatRoute />}>
               <Route path="/alluser" element={<UserLists />} />
+            </Route>
+            <Route path="/friend-list" element={<UserPrivatRoute />}>
+              <Route path="/friend-list" element={<UserFriend />} />
             </Route>
             <Route path="/user/:id" element={<UserPrivatRoute />}>
               <Route path="/user/:id" element={<UserInfoPage />} />
