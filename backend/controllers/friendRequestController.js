@@ -40,29 +40,23 @@ const getAllFriends = asyncHandler( async (req,res) => {
         res.status(400)
         throw new Error("Not Authorized")
     }
-    const friendList = await UserFriend.find({source_id: req.user.id, status:true})
+    const friendList = await UserFriend.find({source_id: req.user.id})
     const sourceUser = friendList.map(async(userRequest) => {
-        return await User.findById({_id: userRequest.target_id}).select("-password -bio -address -phone")
+        const user =  await User.findById({_id: userRequest.target_id}).select("-password -bio -address -phone")
+        // user.state = await userRequest.status
+        return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            profession: user.profession,
+            avatar: user.avatar,
+            state: userRequest.status
+        }
     })
     const users = await Promise.all(sourceUser)
     res.status(200).json(users)
 })
 
-// @desc Get All Pending Friends
-// @route Get /api/users/pending-friends
-// @access User
-const getAllPendingFriend = asyncHandler( async (req,res) => {
-    if(!req.user) {
-        res.status(400)
-        throw new Error("Not Authorized")
-    }
-    const friendList = await UserFriend.find({source_id: req.user.id, status:false})
-    const sourceUser = friendList.map(async(userRequest) => {
-        return await User.findById({_id: userRequest.target_id}).select("-password -bio -address -phone")
-    })
-    const users = await Promise.all(sourceUser)
-    res.status(200).json(users)
-})
 
 
 
@@ -71,5 +65,4 @@ const getAllPendingFriend = asyncHandler( async (req,res) => {
 module.exports = {
     sendFriendRequest,
     getAllFriends,
-    getAllPendingFriend,
 }

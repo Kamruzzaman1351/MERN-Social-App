@@ -9,7 +9,6 @@ router.post("/signup", userSignup)
 router.put("/update", userProtect, userProfileUpdate)
 router.get("/allusers", userProtect, getAllUsers)
 router.get("/friends", userProtect, getAllFriends)
-router.get("/pending-friends", userProtect, getAllPendingFriend)
 router.post("/request", userProtect, sendFriendRequest)
 router.get("/:id", userProtect, getUserInfo)
 
