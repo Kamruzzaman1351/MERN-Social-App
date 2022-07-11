@@ -12,11 +12,20 @@ const getAllFriend = async(token) => {
     return response.data
 }
 
-
+const sendFriendRequest = async(id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.post(API_URL + "request", id, config)
+    return response.data
+}
 
 
 const friendService = {
     getAllFriend,
+    sendFriendRequest,
 
 }
 
