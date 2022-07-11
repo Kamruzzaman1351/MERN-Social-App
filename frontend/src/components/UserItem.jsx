@@ -2,21 +2,22 @@ import React, {useEffect} from 'react'
 import {Col,Button} from "react-bootstrap"
 import avatar from "../assets/images/avatar.jpg"
 import {Link} from "react-router-dom"
-import { sendFriendRequest, reset } from '../features/friend/friendSlice'
+import { sendFriendRequest, reset, getAllFriend } from '../features/friend/friendSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 
 
 const UserItem = ({user}) => {
   const dispatch = useDispatch()
-  const {isError, isMessage} = useSelector(state => state.friend)
+  const {isError, isMessage, friends} = useSelector(state => state.friend)
   useEffect(() => {
     if(isError) {
       toast.error(isMessage, {autoClose:1000})
     }
+    dispatch(getAllFriend())
     dispatch(reset())
   },[isError, dispatch])
-
+  const ids = friends.map(friend => friend.id)
   const sendRequest = () => {
     const data = {
       id: user._id
@@ -34,7 +35,8 @@ const UserItem = ({user}) => {
         <div className="my-3">
           <Link style={{borderRadius: "6px"}} className="bg-primary py-2 px-2 text-white" to={`/user/${user._id}`}>View Profile</Link>
         </div>
-        <Button onClick={sendRequest}>Add Frind</Button>
+        {!ids.includes(user._id) && <Button onClick={sendRequest} >Add Friend</Button>}
+        
       </div>
     </Col>
   )
