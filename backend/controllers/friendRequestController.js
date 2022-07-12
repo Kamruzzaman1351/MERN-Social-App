@@ -46,6 +46,7 @@ const getAllFriends = asyncHandler( async (req,res) => {
         const user =  await User.findById({_id: userRequest.target_id}).select("-password -bio -address -phone")
         // user.state = await userRequest.status
         return {
+            _id: userRequest._id,
             id: user._id,
             name: user.name,
             email: user.email,
@@ -58,6 +59,7 @@ const getAllFriends = asyncHandler( async (req,res) => {
         const user =  await User.findById({_id: userRequest.source_id}).select("-password -bio -address -phone")
         // user.state = await userRequest.status
         return {
+            _id: userRequest._id,
             id: user._id,
             name: user.name,
             email: user.email,
@@ -76,29 +78,26 @@ const getAllFriends = asyncHandler( async (req,res) => {
     ])
 })
 
-// @desc Getting Friend Request
-// @route Get /api/users/recive-request
+// @desc Approved Friend Request
+// @route Get /api/users/approved-request
 // @access User
-const reciveFriendRequest = asyncHandler(async(req, res) => {
+const approvedFriendRequest = asyncHandler(async(req, res) => {
+    const {id} = req.body
     if(!req.user) {
         res.status(400)
         throw new Error("Not Authorized")
     }
-    const friendList = await UserFriend.find({target_id: req.user.id})
-    const sourceUser = friendList.map(async(userRequest) => {
-        const user =  await User.findById({_id: userRequest.source_id}).select("-password -bio -address -phone")
-        // user.state = await userRequest.status
-        return {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            profession: user.profession,
-            avatar: user.avatar,
-            state: userRequest.status
-        }
-    })
-    const users = await Promise.all(sourceUser)
-    res.status(200).json(users)
+    if(!id) {
+        res.status(400)
+        throw new Error("Request Id is require")
+    }
+    const friendRequest = await UserFriend.findOne({_id: id, target_id: req.user.id })
+    if(!friendRequest) {
+        res.status(400)
+        throw new Error("Does not found")
+    }
+    await UserFriend.findByIdAndUpdate(req.body.id, {status:true}, {new:true})
+    res.status(200).json({})
 })
 
 
@@ -106,5 +105,5 @@ const reciveFriendRequest = asyncHandler(async(req, res) => {
 module.exports = {
     sendFriendRequest,
     getAllFriends,
-    reciveFriendRequest,
+    approvedFriendRequest,
 }

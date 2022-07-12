@@ -32,7 +32,17 @@ export const sendFriendRequest = createAsyncThunk("/friend/request", async(id, t
         return thunkAPI.rejectWithValue(message)
     }
 })
-
+// Accept Friend Request
+export const acceptFriendRequest = createAsyncThunk("/friend/accept", async(id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().user.user.token
+        return await friendService.acceptFriendRequest(id, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message)
+                        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
 const friendSlice = createSlice({
     name: "friend",
@@ -71,6 +81,14 @@ const friendSlice = createSlice({
                 state.isError = true
                 state.isMessage = action.payload
                 state.isLoading = false
+            })
+            .addCase(acceptFriendRequest.fulfilled, (state) => {
+                state.isSuccess = true
+            })
+            .addCase(acceptFriendRequest.rejected, (state, action) => {
+                state.isSuccess = false
+                state.isError = true
+                state.isMessage = action.payload
             })
     }
 })
