@@ -12,6 +12,7 @@ import UserInfoPage from "./pages/UserInfoPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserPrivatRoute from "./components/UserPrivatRoute";
+import UserChat from "./pages/UserChat";
 import { useSelector } from "react-redux"
 function App() {
   const {user} = useSelector(state => state.user)
@@ -35,6 +36,9 @@ function App() {
             </Route>
             <Route path="/friend-list" element={<UserPrivatRoute />}>
               <Route path="/friend-list" element={<UserFriend />} />
+            </Route>
+            <Route path="/chatroom" element={<UserPrivatRoute />}>
+              <Route path="/chatroom" element={<UserChat />} />
             </Route>
             <Route path="/user/:id" element={<UserPrivatRoute />}>
               <Route path="/user/:id" element={<UserInfoPage />} />

@@ -19,6 +19,7 @@ const UserProfile = ({user}) => {
                 </>
                 }
                 <Link to="/friend-list" className='btn btn-primary my-3' style={{width:"100%"}}>All Friends</Link>
+                <Link to="/chatroom" className='btn btn-info my-3 text-white' style={{width:"100%"}}>Chat Room</Link>
             </Card.Body>
         </Card>
     </div>
