@@ -41,8 +41,52 @@ const getAllFriends = asyncHandler( async (req,res) => {
         throw new Error("Not Authorized")
     }
     const friendList = await UserFriend.find({source_id: req.user.id})
+    const friendListRecived = await UserFriend.find({target_id: req.user.id})
     const sourceUser = friendList.map(async(userRequest) => {
         const user =  await User.findById({_id: userRequest.target_id}).select("-password -bio -address -phone")
+        // user.state = await userRequest.status
+        return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            profession: user.profession,
+            avatar: user.avatar,
+            state: userRequest.status
+        }
+    })
+    const recUser = friendListRecived.map(async(userRequest) => {
+        const user =  await User.findById({_id: userRequest.source_id}).select("-password -bio -address -phone")
+        // user.state = await userRequest.status
+        return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            profession: user.profession,
+            avatar: user.avatar,
+            state: userRequest.status,
+            recived: "recived"
+        }
+    })
+    const users = await Promise.all(sourceUser)
+    const recivedUser = await Promise.all(recUser)
+    // const allFriend = users.concat(recivedUser)
+    res.status(200).json([
+        users,
+        recivedUser,
+    ])
+})
+
+// @desc Getting Friend Request
+// @route Get /api/users/recive-request
+// @access User
+const reciveFriendRequest = asyncHandler(async(req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not Authorized")
+    }
+    const friendList = await UserFriend.find({target_id: req.user.id})
+    const sourceUser = friendList.map(async(userRequest) => {
+        const user =  await User.findById({_id: userRequest.source_id}).select("-password -bio -address -phone")
         // user.state = await userRequest.status
         return {
             id: user._id,
@@ -59,10 +103,8 @@ const getAllFriends = asyncHandler( async (req,res) => {
 
 
 
-
-
-
 module.exports = {
     sendFriendRequest,
     getAllFriends,
+    reciveFriendRequest,
 }

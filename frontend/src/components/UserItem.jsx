@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 const UserItem = ({user}) => {
   const dispatch = useDispatch()
-  const {isError, isMessage, friends} = useSelector(state => state.friend)
+  const {isError, isMessage} = useSelector(state => state.friend)
   useEffect(() => {
     if(isError) {
       toast.error(isMessage, {autoClose:1000})
@@ -17,7 +17,6 @@ const UserItem = ({user}) => {
     dispatch(getAllFriend())
     dispatch(reset())
   },[isError, dispatch])
-  const ids = friends.map(friend => friend.id)
   const sendRequest = () => {
     const data = {
       id: user._id
@@ -35,7 +34,7 @@ const UserItem = ({user}) => {
         <div className="my-3">
           <Link style={{borderRadius: "6px"}} className="bg-primary py-2 px-2 text-white" to={`/user/${user._id}`}>View Profile</Link>
         </div>
-        {!ids.includes(user._id) && <Button onClick={sendRequest} >Add Friend</Button>}
+        {true && <Button onClick={sendRequest} >Add Friend</Button>}
         
       </div>
     </Col>

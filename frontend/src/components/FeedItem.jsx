@@ -22,7 +22,7 @@ const FeedItem = ({feed, setFeed}) => {
             <Card.Header>
                 <Stack direction='horizontal'>
                     <div>
-                        <Card.Img className="feedUserImg" src={user.avatar ? user.avatar : avatar}/>
+                        <Card.Img className="feedUserImg" src={avatar}/>
                     </div>
                     <div>
                         <h5 className='feedUserName'>{feed.user_name}</h5>
