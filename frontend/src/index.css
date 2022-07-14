@@ -216,6 +216,10 @@ label {
 	margin-bottom: 15px;
 	background-color: var(--light-color);
 	border-radius: 5px;
+    /* float: left; */
+}
+.chat-messages .message.right {
+    text-align: right;
 }
 
 .chat-messages .message .meta {
@@ -269,6 +273,21 @@ label {
     border-bottom-right-radius: 5px;
 }
 
+.chatFriend {
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.chatFriend img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.chatFriend h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 2px;
+}
 
 @media (max-width: 700px) {
 	.chat-main {

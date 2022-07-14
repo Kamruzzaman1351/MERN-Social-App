@@ -1,49 +1,102 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {FaSmile, FaUsers, FaPaperPlane, FaRegSmileWink, FaSmileWink} from "react-icons/fa"
+import { io } from "socket.io-client"
+import { getFriends, reset } from '../features/friend/friendSlice'
+import {useDispatch, useSelector} from "react-redux"
+import {toast} from "react-toastify"
+import ChatFriend from '../components/ChatFriend'
+import Spinner from "../components/shared/Spinner"
+import moment from "moment"
+import MessageBody from '../components/MessageBody'
+// const socket = io.connect("http://localhost:8000")
+
 const UserChat = () => {
-  return (
+    const date = new Date()
+    const [message, setMessage] = useState("")
+    const [socket, setSocket] = useState(null)
+    const [messageList, setMessageList] = useState([])
+    const [room, setRoom] = useState("")
+    const dispatch = useDispatch()
+    const {allFriends, isError, isLoading, isMessage} = useSelector(state => state.friend)
+    const {user} = useSelector(state => state.user)
+    useEffect(() => {
+        if(isError) {
+            toast.error(isMessage, {autoClose:1000})
+        }
+        dispatch(getFriends())
+        dispatch(reset())
+    }, [isError, dispatch])
+
+    useEffect(() => {
+        if(socket === null){
+            setSocket(io("http://localhost:8000"))
+        }
+        if(socket) {
+            socket.on('connect', () => {
+                socket.emit('joined', { 'serverchannel': 120 })
+            })
+
+            socket.on("recive_message", (data) => {
+                setMessageList(prevState => [...prevState, data])
+            })
+        }
+    }, [socket])
+
+    const onSubmit = async (e) => {
+      e.preventDefault()
+      if(message !== "") {
+        const messageData = {
+            author: user.name,
+            room: room._id,
+            message,
+            time: moment(date).fromNow()
+        }
+        await socket.emit("send_message", messageData)
+        setMessageList(prevState => [...prevState, messageData])
+        setMessage("")
+      }
+    }
+
+
+    if(isLoading) {
+        return <Spinner />
+    }
+
+    return (
     <div className="chat-container">
         <header className="mx-auto chat-header text-center">
-            <h1><FaSmileWink /> <FaSmile /> <FaRegSmileWink /> Chat With your Friends</h1>
+            <h1><FaSmileWink /> <FaSmile /> <FaRegSmileWink /> Chat With {room.name}</h1>
         </header>
         <main className="chat-main">
             <div className="chat-sidebar">
                 <h3><FaUsers /> Friend List</h3>
-                <ul id="users">
-                    <li>Brad</li>
-                    <li>John</li>
-                    <li>Mary</li>
-                    <li>Paul</li>
-                    <li>Mike</li>
-                </ul>
+                {allFriends.length > 0 && <>
+                    {allFriends.map(friend => (<ChatFriend key={friend.id} friend={friend} socket={socket} room={setRoom} user={user}/>))}
+                   
+                </>}
             </div>
             <div className="chat-messages">
-                <div className="message">
-                    <p className="meta">Brad <span>9:12pm</span></p>
-                    <p className="text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-                        repudiandae.
-                    </p>
-                </div>
-                <div className="message">
-                    <p className="meta">Mary <span>9:15pm</span></p>
-                    <p className="text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-                        repudiandae.
-                    </p>
-                </div>
+                {room && <>
+                    {messageList.map(message => (<>
+                        {room._id === message.room && <MessageBody key={message.room} message={message} user={user}/>}
+                    </>
+                    ))}
+                    
+                </>}
             </div>
         </main>
         <div className="chat-form-container">
-            <form>
+            <form onSubmit={onSubmit}>
                 <input
                     id="msg"
                     type="text"
                     placeholder="Enter Message"
                     required
                     autoComplete="off"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                 />
-                <button className="chatbtn"><FaPaperPlane /> Send</button>
+                <button type="submit" className="chatbtn"><FaPaperPlane /> Send</button>
             </form>
         </div>
     </div>

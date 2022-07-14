@@ -7,6 +7,7 @@ const initialState = {
     isError: false,
     friends: [],
     isMessage: '',
+    allFriends:[]
 }
 
 // Get Friend List
@@ -37,6 +38,18 @@ export const acceptFriendRequest = createAsyncThunk("/friend/accept", async(id, 
     try {
         const token = thunkAPI.getState().user.user.token
         return await friendService.acceptFriendRequest(id, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message)
+                        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Get All Friends
+export const getFriends = createAsyncThunk("/user/friends", async(_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().user.user.token
+        return await friendService.getFriends(token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message)
                         || error.message || error.toString()
@@ -87,6 +100,19 @@ const friendSlice = createSlice({
             })
             .addCase(acceptFriendRequest.rejected, (state, action) => {
                 state.isSuccess = false
+                state.isError = true
+                state.isMessage = action.payload
+            })
+            .addCase(getFriends.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getFriends.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.allFriends = action.payload
+            })
+            .addCase(getFriends.rejected, (state, action) => {
+                state.isLoading = false
                 state.isError = true
                 state.isMessage = action.payload
             })

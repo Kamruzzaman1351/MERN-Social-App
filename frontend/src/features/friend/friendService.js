@@ -32,10 +32,21 @@ const acceptFriendRequest = async (id, token) => {
     return response.data
 }
 
+const getFriends = async(token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(API_URL + "allfriends", config)
+    return response.data
+}
+
 const friendService = {
     getAllFriend,
     sendFriendRequest,
     acceptFriendRequest,
+    getFriends,
 }
 
 export default friendService

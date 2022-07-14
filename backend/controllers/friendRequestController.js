@@ -100,10 +100,48 @@ const approvedFriendRequest = asyncHandler(async(req, res) => {
     res.status(200).json({})
 })
 
-
+// @desc Get all Friends 
+// @route Get /api/users/allfriends
+// @access User
+const getFriends = asyncHandler(async(req, res) => {
+    if(!req.user) {
+        res.status(400)
+        throw new Error("Not authorized")
+    }
+    const requests = await UserFriend.find(
+            {   status:true, 
+                $or: [{source_id: req.user.id }, {target_id: req.user.id} ]
+            })
+    if(requests.length === 0 ) {
+        res.status(400)
+        throw new Error("Friend does not found")
+    }
+    const friends = requests.map(async(friend)=> {
+        if(friend.target_id.toString() === req.user.id.toString()) {
+            const user = await User.findById(friend.source_id)
+            return {
+                _id: friend._id,
+                id: user._id,
+                name: user.name,
+                img: user.avatar
+            }
+        } else {
+            const user = await User.findById(friend.target_id)
+            return {
+                _id: friend._id,
+                id: user._id,
+                name: user.name,
+                img: user.avatar
+            }
+        }
+    })
+    const allFriends = await Promise.all(friends)
+    res.status(200).json(allFriends)
+})
 
 module.exports = {
     sendFriendRequest,
     getAllFriends,
     approvedFriendRequest,
+    getFriends,
 }
