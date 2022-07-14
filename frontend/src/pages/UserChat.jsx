@@ -6,12 +6,11 @@ import {useDispatch, useSelector} from "react-redux"
 import {toast} from "react-toastify"
 import ChatFriend from '../components/ChatFriend'
 import Spinner from "../components/shared/Spinner"
-import moment from "moment"
 import MessageBody from '../components/MessageBody'
+import ScrollToBottom from 'react-scroll-to-bottom'
 // const socket = io.connect("http://localhost:8000")
 
 const UserChat = () => {
-    const date = new Date()
     const [message, setMessage] = useState("")
     const [socket, setSocket] = useState(null)
     const [messageList, setMessageList] = useState([])
@@ -36,6 +35,9 @@ const UserChat = () => {
                 socket.emit('joined', { 'serverchannel': 120 })
             })
 
+            socket.on("old message", (data) => {
+                setMessageList(data)
+            })
             socket.on("recive_message", (data) => {
                 setMessageList(prevState => [...prevState, data])
             })
@@ -49,7 +51,7 @@ const UserChat = () => {
             author: user.name,
             room: room._id,
             message,
-            time: moment(date).fromNow()
+            time: new Date()
         }
         await socket.emit("send_message", messageData)
         setMessageList(prevState => [...prevState, messageData])
@@ -75,15 +77,16 @@ const UserChat = () => {
                    
                 </>}
             </div>
-            <div className="chat-messages">
+            <ScrollToBottom className="chat-messages">
                 {room && <>
-                    {messageList.map(message => (<>
-                        {room._id === message.room && <MessageBody key={message.room} message={message} user={user}/>}
+                    {messageList.map((message, index) => (<>
+                        {room._id === message.room && <MessageBody key={index} message={message} user={user}/>}
                     </>
                     ))}
                     
                 </>}
-            </div>
+                
+            </ScrollToBottom>
         </main>
         <div className="chat-form-container">
             <form onSubmit={onSubmit}>

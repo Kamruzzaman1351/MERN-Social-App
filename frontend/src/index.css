@@ -208,7 +208,7 @@ label {
 .chat-messages {
 	padding: 30px;
 	max-height: 500px;
-	overflow-y: scroll;
+	/* overflow-y: scroll; */
 }
 
 .chat-messages .message {
