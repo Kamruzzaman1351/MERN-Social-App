@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require("path")
 const dotenv = require("dotenv").config()
 const { createServer } = require("http")
 const { Server } = require("socket.io")
@@ -23,13 +24,21 @@ app.use("/api/feeds", require("./routers/feedRouters.js"))
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: ["http://localhost:3000", "https://mernsocialappkam.herokuapp.com/"]
     }
 })
 
 io.on("connection", messageHandler)
 
-
+// Serving Frontend
+if(process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/build")))
+    app.get("*", (req, res) => {
+        res.sendFile(
+           path.resolve(__dirname, "../", "frontend", "build", "index.html") 
+        )
+    })
+}
 
 
 app.use(errorHandler)

@@ -28,7 +28,7 @@ const UserChat = () => {
 
     useEffect(() => {
         if(socket === null){
-            setSocket(io("http://localhost:8000"))
+            setSocket(io(["http://localhost:8000", "https://mernsocialappkam.herokuapp.com/"]))
         }
         if(socket) {
             socket.on('connect', () => {

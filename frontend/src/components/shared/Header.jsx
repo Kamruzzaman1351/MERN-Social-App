@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom"
 import {Container, Stack} from "react-bootstrap"
 import { useSelector, useDispatch } from 'react-redux'
 import { logoutUser } from '../../features/auth/userSlice'
+import {GiAbstract024} from "react-icons/gi"
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ const Header = () => {
         <div>
           <Stack direction="horizontal" gap={3}>
             <Link to={ user ? "/feeds" : "/"}>
-              <h2 className="text-white link">Social App</h2>
+              <h2 className="text-white link"><GiAbstract024/> Social App</h2>
             </Link>
             {user ? (<>
               <div className="ms-auto">
